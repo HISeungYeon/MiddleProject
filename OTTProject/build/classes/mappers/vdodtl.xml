@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vdodtl">
+
+	<insert id="insert"
+		parameterType="vdodtlVO" flushCache="true">
+
+		insert into vdodtl (vdodtl_num, vdoty_num, vdolev_num, vdodtl_nm, vdodtl_dtl, vdodtl_sumy, vdodtl_redt, atch_file_id) 
+		values(VDODTL_SEQ.NEXTVAL, #{vdotyNum}, #{vdolevNum}, #{vdodtlNm}, #{vdodtlDtl}, #{vdodtlSumy}, sysdate, #{atchFileId})
+
+	</insert>
+
+	<update id="update">
+
+		UPDATE vdodtl SET 
+		vdoty_num = #{vdotyNum},
+		vdolev_num = #{vdolevNum},
+		vdodtl_nm = #{vdodtlNm},
+		vdodtl_dtl = #{vdodtlDtl},
+		atch_file_id = #{atchFileId}
+		WHERE
+		vdodtl_num = #{vdodtlNum}
+
+	</update>
+
+	<delete id="delete" parameterType="String">
+
+		delete from vdodtl
+		where vdodtl_num = #{vdodtlNum}
+
+	</delete>
+
+	<resultMap type="vdodtlVO" id="vdodtlMap">
+
+		<result property="vdodtlNum" column="vdodtl_num" />
+		<result property="vdotyNum" column="vdoty_num" />
+		<result property="vdolevNum" column="vdolev_num" />
+		<result property="vdodtlNm" column="vdodtl_nm" />
+		<result property="vdodtlDtl" column="vdodtl_dtl" />
+		<result property="vdodtlSumy" column="vdodtl_sumy" />
+		<result property="vdodtlPlytm" column="vdodtl_plytm" />
+		<result property="vdodtlRedt" column="vdodtl_redt" />
+		<result property="vdodtlLik" column="vdodtl_lik" />
+		<result property="vdodtlImg" column="vdodtl_img" />
+		<result property="atchFileId" column="atch_file_id" />
+
+	</resultMap>
+
+	<select id="getAllVdodtlList" resultMap="vdodtlMap">
+
+		select *
+		from vdodtl vd, atch_file_detail at
+		where vd.atch_file_id = at.atch_file_id
+
+	</select>
+
+	<select id="selectOne" parameterType="String" resultMap="vdodtlMap">
+
+		select *
+		from vdodtl vd, atch_file_detail at
+		where vdodtl_num = #{vdodtlNum}
+		and vd.atch_file_id = at.atch_file_id
+	</select>
+
+	<select id="checkVdodtl" parameterType="String" resultType="int">
+
+		select count(*) as cnt
+		from vdodtl
+		where vdodtl_num = #{vdodtlNum}
+
+	</select>
+
+	<select id="searchVdodtl" parameterType="SearchVO"
+		resultType="vdodtlVO">
+		
+		select *   
+		from vdodtl vd, atch_file_detail at, vdoty t
+		where vd.atch_file_id = at.atch_file_id 
+		and   vd.VDOTY_NUM = T.VDOTY_NUM
+		and ${part} like #{searchData}
+
+	</select>
+	
+	
+	<update id="incLike" parameterType="String">
+		update vdodtl
+		set	vdodtl_lik = vdodtl_lik+1
+		where vdodtl_num = #{vdodtlNum}
+	</update>
+
+	<select id="likeRank"  resultMap="vdodtlMap">
+		select *
+		from vdodtl v, atch_file_detail a
+		where v.atch_file_id = a.atch_file_id
+		order by vdodtl_lik desc
+	</select>
+</mapper>

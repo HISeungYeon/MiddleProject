@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="rep">
+
+	<insert id="insertRep" parameterType="RepVO">	
+	INSERT INTO rep
+	(rep_num, oob_num, rep_con, rep_date, rep_Sit)
+	VALUES (REP_NUM.nextval, #{oobNum}, #{repCon}, sysdate, #{repSit})
+	</insert>
+
+	<update id="updateRep">
+		UPDATE rep SET
+		rep_con = #{repCon}
+		WHERE rep_num= #{repNum}
+	</update>
+	
+	<delete id="deleteRep" parameterType="String">
+		delete from rep
+		where rep_num = #{repNum}
+	</delete>
+	
+	<resultMap type="kr.or.ddit.ott.rep.vo.RepVO" id="repMap">
+		<result property="repNum" column="rep_num" />
+		<result property="oobNum" column="oob_num" />
+		<result property="repCon" column="rep_con" />
+		<result property="repDate" column="rep_date" />
+		<result property="repSit" column="rep_Sit" />
+	</resultMap>
+	
+	<select id="getRep" resultType="repVO">
+		select *
+		from rep
+		where rep_num = #{repNum}
+	</select>
+	
+	<select id="checkRep" parameterType="String" resultType="int">
+		select count(*) as cnt
+		from rep
+		where rep_num = #{repNum}
+	</select>
+	
+	<select id="allRepList" parameterType="repVO" resultMap="repMap">
+
+		select * from rep
+		where oob_num = #{oobNum}
+
+	</select>
+
+
+</mapper>

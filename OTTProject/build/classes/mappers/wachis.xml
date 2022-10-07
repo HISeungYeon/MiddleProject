@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wachis">
+
+	<insert id="insert" parameterType="WacHisVO">
+  
+	     INSERT INTO wachis (wachis_num, mem_num, vdodtl_num, wachis_dtus) 
+	     VALUES (WACHIS_SEQ.nextval, #{memNum}, #{vdodtlNum}, sysdate) 
+ 
+	</insert>
+	
+	<resultMap type="WacHisVO" id="wachisMap" >
+
+		<result property="wachisNum" column="wachis_num" />
+		<result property="memNum" column="mem_num" />
+		<result property="vdodtlNum" column="vdodtl_num" />
+		<result property="wachisDtus" column="wachis_dtus" />
+		<result property="streFileNm" column="stre_file_nm" />
+		<result property="vdodtlNm" column="vdodtl_nm" />
+		<result property="memEm" column="mem_em" />
+
+	</resultMap>
+	
+	<select id="wachisList" parameterType="String" resultMap="wachisMap">
+
+		SELECT *
+		FROM MEM M, WACHIS W, VDODTL V, ATCH_FILE_DETAIL A
+		WHERE M.MEM_NUM = W.MEM_NUM
+		AND W.VDODTL_NUM = V.VDODTL_NUM
+		AND A.ATCH_FILE_ID = V.ATCH_FILE_ID
+		AND M.MEM_EM = #{memEm}
+
+	</select>
+
+	<delete id="delete" parameterType="String">
+		delete from wachis
+		where wachis_num = #{wachisNum}
+	</delete>
+	
+		<select id="selectOne" parameterType="String" resultMap="wachisMap">
+
+		select *
+		from wachis
+		where wachis_num = #{wachisNum}
+
+	</select>
+	
+	<select id="listCheck" parameterType="WisListVO" resultType="int">
+		 select count(*) from wachis where mem_num =#{memNum} and vdodtl_num=#{vdodtlNum}
+	</select>
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ntc">
+
+	<insert id="insert" parameterType="ntcVO">
+
+		INSERT INTO ntc (ntc_num, ntc_tit, ntc_con, ntc_date) 
+		values(NTC_SEQ.nextval, #{ntcTit}, #{ntcCon}, sysdate)
+		
+	</insert>
+
+	<update id="update">
+
+		UPDATE NTC SET 
+		ntc_tit = #{ntcTit}, 
+		ntc_con= #{ntcCon}
+		WHERE ntc_num= #{ntcNum}
+	</update>
+
+	<delete id="delete" parameterType="String">
+
+		delete from ntc
+		where ntc_num = #{ntcNum}
+
+	</delete>
+
+	<resultMap type="ntcVO" id="ntcMap">
+
+		<result property="ntcNum" column="ntc_num" />
+		<result property="memNum" column="mem_num" />
+		<result property="ntcTit" column="ntc_tit" />
+		<result property="ntcCon" column="ntc_con" />
+		<result property="ntcDate" column="ntc_date" />
+
+	</resultMap>
+
+	<select id="getAllNtcList" resultMap="ntcMap">
+
+		select * from ntc order by ntc_num asc
+
+	</select>
+
+	<select id="selectOne" parameterType="String" resultMap="ntcMap">
+
+		select *
+		from ntc
+		where ntc_num = #{ntcNum}
+
+	</select>
+
+	<select id="checkNtc" parameterType="String" resultType="int">
+
+		select count(*) as cnt
+		from ntc
+		where ntc_num = #{ntcNum}
+
+	</select>
+
+	<select id="searchNtc" parameterType="NtcVO"
+		resultType="NtcVO">
+
+		select * from ntc
+		where 1=1
+		<if test="ntcNum != null and ntcNum != ''">
+			and ntc_num = #{ntcNum}
+		</if>
+		<if test="ntcTit != null and ntcTit != ''">
+			and ntc_tit like '%' || #{ntcTit} || '%'
+		</if>
+		<if test="ntcCon != null and ntcCon != ''">
+			and ntc_con = #{ntcCon}
+		</if>
+
+	</select>
+
+</mapper>

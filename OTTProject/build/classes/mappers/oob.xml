@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="oob">
+
+	<!-- insert -->
+	<insert id="insertOob" parameterType="oobVO">
+
+		INSERT INTO oob
+		(oob_num, mem_num, oob_tit, oob_con, oob_date)
+		VALUES (OOB_NUM.nextval, #{memNum}, #{oobTit}, #{oobCon}, sysdate)
+	</insert>
+
+	<!-- update -->
+	<update id="updateOob">
+
+		UPDATE oob SET
+		oob_tit = #{oobTit},
+		oob_con= #{oobCon}
+		WHERE oob_num= #{oobNum}
+
+	</update>
+	
+	<delete id="deleteOob" parameterType="String">
+
+		delete from oob
+		where oob_num = #{oobNum}
+
+	</delete>
+	
+	
+	<resultMap type="kr.or.ddit.ott.oob.vo.OobVO" id="oobMap">
+
+		<result property="oobNum" column="oob_num" />
+		<result property="memNum" column="mem_num" />
+		<result property="oobTit" column="oob_tit" />
+		<result property="oobCon" column="oob_con" />
+		<result property="oobDate" column="oob_date" />
+
+	</resultMap>
+
+	<!-- select -->
+	<select id="getOob" resultType="oobVO">
+
+		select *
+		from oob
+		where oob_num = #{oobNum}
+
+	</select>
+
+	<select id="checkOob" parameterType="String" resultType="int">
+
+		select count(*) as cnt
+		from oob
+		where oob_num = #{oobNum}
+
+	</select>
+	
+	<select id="allOobList"  resultMap="oobMap">
+
+		select * from oob
+
+	</select>
+	
+	<select id="memOobList" resultMap="oobMap">
+	
+		select * 
+		from oob
+		where mem_num = #{memNum}
+	
+	</select>
+	
+	<select id="repSit" resultType="int" flushCache="true">
+	
+		select count(*)
+		from rep
+		where oob_num = #{oobNum}
+	
+	</select>
+	
+	<select id="searchOobList" parameterType="oobVO"
+		resultType="oobVO">
+
+		select * from oob
+		where 1=1
+		<if test="oobNum != null and oobNum != ''">
+			and oob_num = #{oobNum}
+		</if>
+		<if test="oobTit != null and oobTit != ''">
+			and oob_tit = #{oobTit}
+		</if>
+		<if test="oobCon != null and oobCon != ''">
+			and oob_con = #{oobCon}
+		</if>
+
+	</select>
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lkhis">
+
+	<insert id="insert" parameterType="LkhisVO">
+  
+	     INSERT INTO lkhis (lkhis_num, mem_num, vdodtl_num, lkhis_down) 
+	     VALUES (lkhis_seq.nextval, #{memNum}, #{vdodtlNum}, sysdate) 
+ 
+	</insert>
+
+	<resultMap type="LkhisVO" id="lkhisMap">
+
+		<result property="lkhisNum" column="lkhis_num" />
+		<result property="memNum" column="mem_num" />
+		<result property="vdodtlNum" column="vdodtl_num" />
+		<result property="lkhisDown" column="lkhis_down" />
+		<result property="streFileNm" column="stre_file_nm" />
+		<result property="vdodtlNm" column="vdodtl_nm" />
+		<result property="memEm" column="mem_em" />
+
+	</resultMap>
+
+	<select id="searchLkhisList" parameterType="String"  resultMap="lkhisMap">
+            
+        SELECT *
+		FROM MEM M, lkhis L, VDODTL V, ATCH_FILE_DETAIL A
+		WHERE M.MEM_NUM = L.MEM_NUM
+		AND L.VDODTL_NUM = V.VDODTL_NUM
+		AND A.ATCH_FILE_ID = V.ATCH_FILE_ID
+
+	</select>
+
+	<delete id="delete" parameterType="String">
+  
+         delete from lkhis where mem_num =#{memNum} and vdodtl_num=#{vdodtlNum}
+   
+	</delete>
+	<select id="listCheck" parameterType="LkhisVO" resultType="int">
+		 select count(*) from lkhis where mem_num =#{memNum} and vdodtl_num=#{vdodtlNum}
+	</select>
+	
+	<delete id="remove" parameterType="String">
+         delete from lkhis where lkhis_num = #{lkhisNum} 
+	</delete>
+	
+	<select id="selectOne" parameterType="String" resultMap="lkhisMap">
+
+		select *
+		from lkhis
+		where lkhis_num = #{lkhisNum}
+
+	</select>
+	
+</mapper>

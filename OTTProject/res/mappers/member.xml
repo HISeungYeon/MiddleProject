@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<insert id="membership" parameterType="kr.or.ddit.ott.mem.vo.MemberVO">
+		INSERT INTO MEM (mem_num, mem_em, mem_nm, mem_tel, mem_pw, mem_nal, mem_bir)
+		VALUES (mem_Num.nextval, #{memEm}, #{memNm}, #{memTel}, #{memPw}, #{memNal}, #{memBir})
+	</insert>
+
+	<select id="duplicateEmail" parameterType="String" resultType="int">
+		SELECT count(*)
+		FROM MEM
+		WHERE mem_em = #{memEm}
+	</select>
+
+	<select id="login" parameterType="kr.or.ddit.ott.mem.vo.MemberVO" resultType="kr.or.ddit.ott.mem.vo.MemberVO">
+		SELECT  mem_num,
+				mem_em,
+				mem_nm,
+				mem_pw,
+				mem_tel,
+				to_char(mem_bir, 'YYYY-MM-DD') mem_bir,
+				mem_nal
+		FROM MEM
+		WHERE mem_em = #{memEm}
+		AND mem_pw = #{memPw}
+	</select>
+
+	<update id="findPwMember">
+		UPDATE MEM SET 
+		mem_pw = #{memPw}
+		WHERE
+		mem_em = #{memEm}
+	</update>
+
+	<select id="MypageList" parameterType="kr.or.ddit.ott.mem.vo.MemberVO"
+		resultType="kr.or.ddit.ott.mem.vo.MemberVO">
+		SELECT  mem_em
+			,	mem_nm
+			,	mem_pw
+			,	mem_tel
+			,	mem_bir
+			,	mem_nal
+		FROM MEM
+		WHERE mem_em = #{memEm}
+	</select>
+
+	<update id="MyPageMemberUpdate" parameterType="kr.or.ddit.ott.mem.vo.MemberVO">
+		UPDATE MEM SET 
+		 mem_nm = #{memNm}
+		,mem_pw = #{memPw}
+		,mem_tel = #{memTel}
+		,mem_bir = #{memBir}
+		,mem_nal = #{memNal}
+		WHERE
+		mem_em = #{memEm}
+	</update>
+
+	<delete id="deleteMember" parameterType="String">
+		DELETE FROM MEM
+		WHERE mem_em = #{memEm}
+	</delete>
+	
+	
+	<resultMap type="memVO" id="memMap">
+
+		<result property="memNum" column="mem_num" />
+		<result property="memEm" column="mem_em" />
+		<result property="memNm" column="mem_nm" />
+		<result property="memTel" column="mem_tel" />
+		<result property="memPw" column="mem_pw" />
+		<result property="memNal" column="mem_nal" />
+		<result property="memBir" column="mem_bir" />
+
+	</resultMap>
+	
+	<select id="getAllMemList" resultMap="memMap">
+		select  mem_num,
+				mem_em,
+				mem_nm,
+				mem_pw,
+				mem_tel,
+				to_char(mem_bir, 'YYYY-MM-DD') mem_bir,
+				mem_nal 
+				from mem order by mem_num asc
+	</select>
+	
+</mapper>

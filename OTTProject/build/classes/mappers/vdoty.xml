@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vdoty">
+
+	<resultMap type="vdodtlVO" id="vdodtlMap">
+
+		<result property="vdodtlNum" column="vdodtl_num" />
+		<result property="vdotyNum" column="vdoty_num" />
+		<result property="vdolevNum" column="vdolev_num" />
+		<result property="vdodtlNm" column="vdodtl_nm" />
+		<result property="vdodtlDtl" column="vdodtl_dtl" />
+		<result property="vdodtlSumy" column="vdodtl_sumy" />
+		<result property="vdodtlPlytm" column="vdodtl_plytm" />
+		<result property="vdodtlRedt" column="vdodtl_redt" />
+		<result property="vdodtlLik" column="vdodtl_lik" />
+		<result property="vdodtlImg" column="vdodtl_img" />
+		<result property="atchFileId" column="atch_file_id" />
+
+	</resultMap>
+
+	<select id="getAllVdodtlList" resultMap="vdodtlMap">
+
+		select *
+		from vdodtl vd, atch_file_detail at
+		where vd.atch_file_id = at.atch_file_id
+
+	</select>
+
+	<select id="selectOne" parameterType="String" resultMap="vdodtlMap">
+
+		select *
+		from vdodtl vd, atch_file_detail at
+		where vdodtl_num = #{vdodtlNum}
+		and vd.atch_file_id = at.atch_file_id
+	</select>
+
+	<select id="checkVdodtl" parameterType="String" resultType="int">
+
+		select count(*) as cnt
+		from vdodtl
+		where vdodtl_num = #{vdodtlNum}
+
+	</select>
+
+	<select id="searchVdodtl" parameterType="vdodtlVO"
+		resultType="vdodtlVO">
+
+		select * from vdodtl
+		where 1=1
+		<if test="vdodtlNum != null and vdodtlNum != ''">
+			and vdodtl_num = #{vdodtlNum}
+		</if>
+		<if test="vdotyNum != null and vdotyNum != ''">
+			and vdoty_num = #{vdotyNum}
+		</if>
+		<if test="vdodtlNm != null and vdodtlNm != ''">
+			and vdodtl_nm like '%' || #{vdodtlNm} || '%'
+		</if>
+
+	</select>
+
+</mapper>
